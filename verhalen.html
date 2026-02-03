@@ -7,6 +7,7 @@
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow-x: hidden; }
 
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -14,6 +15,7 @@
       color: #222;
     }
 
+    /* ===== NAV ===== */
     .site-header{
       position: sticky;
       top: 0;
@@ -29,6 +31,7 @@
       padding: 10px 16px;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 12px;
       position: relative;
     }
@@ -42,7 +45,7 @@
     }
 
     .nav-toggle{
-      margin-left: auto;
+      margin-left: 0;
       border: 0;
       background: transparent;
       font-size: 24px;
@@ -97,6 +100,7 @@
       .nav{ flex-wrap: wrap; }
     }
 
+    /* ===== LAYOUT ===== */
     .container {
       max-width: 720px;
       margin: 0 auto;
@@ -217,7 +221,7 @@
       animation: popIn 420ms ease forwards;
     }
 
-    /* TIMELINE */
+    /* ===== TIMELINE ===== */
     .timeline {
       position: relative;
       padding-left: 22px;
@@ -292,7 +296,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Foto in moment */
+    /* Foto in moment (Noordwijk) */
     .moment-photo {
       margin-top: 12px;
       border-radius: 14px;
@@ -384,6 +388,54 @@
 
       <div class="timeline">
 
+        <!-- NIEUW: It's a match -->
+        <details class="moment">
+          <summary>
+            <span class="date">15-07-2023</span>
+            <span class="label">🔥 It’s a match</span>
+            <span class="chev">⌄</span>
+          </summary>
+          <div class="moment-body">
+            Dat ene moment waarop alles begon. Een match die meteen goed voelde. 💥❤️<br>
+            <em>Vanaf dat moment voelde het anders.</em>
+          </div>
+        </details>
+
+        <!-- NIEUW: 1e date + kaartje -->
+        <details class="moment">
+          <summary>
+            <span class="date">18-07-2023</span>
+            <span class="label">🍷 Onze 1e date</span>
+            <span class="chev">⌄</span>
+          </summary>
+
+          <div class="moment-body">
+            Onze eerste echte date samen bij <strong>Boscafé De Nachtegaal</strong> in Meerssen.<br>
+            Goede gesprekken, wijn en die fijne spanning. ✨<br>
+            <em>Hier begon het écht.</em> ❤️
+
+            <div class="map" aria-label="Kaart Boscafé De Nachtegaal - Meerssen">
+              <iframe
+                title="Boscafé De Nachtegaal kaart"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=5.7079%2C50.8826%2C5.7123%2C50.8856&layer=mapnik&marker=50.8841%2C5.7101">
+              </iframe>
+            </div>
+
+            <div class="map-note">
+              Boscafé De Nachtegaal • Gemeentebroek 6, 6231 RV Meerssen •
+              <a
+                href="https://www.openstreetmap.org/?mlat=50.8841&mlon=5.7101#map=17/50.8841/5.7101"
+                target="_blank"
+                rel="noopener">
+                Bekijk op de kaart
+              </a>
+            </div>
+          </div>
+        </details>
+
+        <!-- BESTAAND -->
         <details class="moment">
           <summary>
             <span class="date">03-08-2023</span>
@@ -391,10 +443,11 @@
             <span class="chev">⌄</span>
           </summary>
           <div class="moment-body">
-            De dag dat ons verhaal begon. 🫶
+            De dag dat ons verhaal officieel begon. 🫶
           </div>
         </details>
 
+        <!-- Noordwijk + foto + kaart -->
         <details class="moment">
           <summary>
             <span class="date">21-10-2023</span>
@@ -428,6 +481,7 @@
           </div>
         </details>
 
+        <!-- Vandaag -->
         <details class="moment">
           <summary>
             <span class="date" id="todayLabel">Vandaag</span>
@@ -545,9 +599,7 @@
     const isExactHalfYearBoundary = (monthsPassed % 6 === 0) && (monthsPassed > 0);
 
     if (isExactHalfYearBoundary) {
-      // Maak de hele container zichtbaar (geen lege ruimte op andere dagen)
       milestoneWrap.style.display = "block";
-
       const milestoneDate = addMonths(startOfDay(start), monthsPassed);
 
       if (monthsPassed % 12 === 0) {
