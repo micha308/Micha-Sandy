@@ -344,4 +344,268 @@
   <main class="container">
 
     <div class="quote">
-      “Jij bent mijn favoriete persoon. Vandaag, morgen, en alle dagen daarna
+      “Jij bent mijn favoriete persoon. Vandaag, morgen, en alle dagen daarna.” 💕
+    </div>
+
+    <div class="card">
+      <h2>💞 Micha & Sandy</h2>
+
+      <p id="togetherLine" style="color:#555; line-height:1.6;">
+        Samen sinds <strong>03-08-2023</strong><br>
+      </p>
+
+      <!-- Alleen zichtbaar op de exacte dag van een halfjaar/jaar mijlpaal -->
+      <div class="mini">
+        <div id="milestoneBanner" class="milestone-banner" aria-live="polite">
+          <div class="milestone-row">
+            <div class="milestone-icon" id="milestoneIcon">🫶</div>
+            <div>
+              <div class="milestone-title" id="milestoneTitle">Vandaag precies …</div>
+            </div>
+          </div>
+          <div class="milestone-sub" id="milestoneSub">❤️</div>
+        </div>
+      </div>
+
+      <button class="btn" id="openNote">💌 Open lief bericht</button>
+
+      <div class="hidden-note" id="note">
+        <strong>Lieve Schat,</strong><br><br>
+        Vandaag zijn we samen — en ik voel nog steeds hetzelfde als in het begin,
+        maar dan duizend keer sterker. Dankjewel voor je liefde, je geduld, je lach,
+        en voor alle mooie momenten samen.<br><br>
+        Ik kies jou. Vandaag. Morgen. En alle dagen die nog komen. ❤️<br><br>
+        <em>Liefs Micha</em>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📅 Onze momenten</h2>
+
+      <div class="timeline">
+
+        <details class="moment">
+          <summary>
+            <span class="date">03-08-2023</span>
+            <span class="label">💗 Het begin van ons</span>
+            <span class="chev">⌄</span>
+          </summary>
+          <div class="moment-body">
+            De dag dat ons verhaal begon. 🫶
+          </div>
+        </details>
+
+        <details class="moment">
+          <summary>
+            <span class="date">21-10-2023</span>
+            <span class="label">🌊 1e weekendje weg — Noordwijk</span>
+            <span class="chev">⌄</span>
+          </summary>
+
+          <div class="moment-body">
+            Ons eerste weekend samen weg. Strand, zee, samen wakker worden — dit voelde zó goed en zó echt. 💞
+
+            <div class="moment-photo">
+              <img src="./noordwijk.jpeg" alt="Noordwijk - ons eerste weekendje weg">
+              <div class="caption">Noordwijk 🌊 — 21 oktober 2023</div>
+            </div>
+
+            <div class="map" aria-label="Kaart Noordwijk">
+              <iframe
+                title="Noordwijk kaart"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=4.392%2C52.210%2C4.465%2C52.256&layer=mapnik&marker=52.239%2C4.448">
+              </iframe>
+            </div>
+
+            <div class="map-note">
+              Groter openen?
+              <a href="https://www.openstreetmap.org/?mlat=52.239&mlon=4.448#map=14/52.239/4.448" target="_blank" rel="noopener">
+                Bekijk Noordwijk op de kaart
+              </a>
+            </div>
+          </div>
+        </details>
+
+        <details class="moment">
+          <summary>
+            <span class="date" id="todayLabel">Vandaag</span>
+            <span class="label">🎉 Weer een dag dichter bij nog meer mooie herinneringen</span>
+            <span class="chev">⌄</span>
+          </summary>
+          <div class="moment-body" id="todayMomentBody">
+            En nog steeds elke dag dankbaar dat we samen zijn. ❤️
+          </div>
+        </details>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // Mobiel menu toggle
+    const navToggle = document.getElementById("navToggle");
+    const navLinks = document.getElementById("navLinks");
+
+    navToggle.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("open");
+      navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    });
+
+    navLinks.querySelectorAll("a").forEach(a => {
+      a.addEventListener("click", () => {
+        navLinks.classList.remove("open");
+        navToggle.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    // ===== Helpers: datums exact (kalender-precies) =====
+    const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
+    function startOfDay(d) {
+      return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    }
+
+    function pad2(n){ return String(n).padStart(2, "0"); }
+
+    function formatNL(d) {
+      return `${pad2(d.getDate())}-${pad2(d.getMonth() + 1)}-${d.getFullYear()}`;
+    }
+
+    function addMonths(date, monthsToAdd){
+      const d = new Date(date.getTime());
+      const y = d.getFullYear();
+      const m = d.getMonth();
+      const day = d.getDate();
+
+      const target = new Date(y, m + monthsToAdd, 1);
+      const lastDay = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+      target.setDate(Math.min(day, lastDay));
+      return target;
+    }
+
+    function addYears(date, yearsToAdd){
+      const d = new Date(date.getTime());
+      const target = new Date(d.getFullYear() + yearsToAdd, d.getMonth(), 1);
+      const lastDay = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+      target.setDate(Math.min(d.getDate(), lastDay));
+      return target;
+    }
+
+    function diffYMD(start, end){
+      let s = startOfDay(start);
+      let e = startOfDay(end);
+
+      if (e < s) return { years: 0, months: 0, days: 0 };
+
+      let years = e.getFullYear() - s.getFullYear();
+      let anchor = addYears(s, years);
+      if (anchor > e){
+        years--;
+        anchor = addYears(s, years);
+      }
+
+      let months = e.getMonth() - anchor.getMonth();
+      if (months < 0) months += 12;
+
+      let anchor2 = addMonths(anchor, months);
+      if (anchor2 > e){
+        months--;
+        anchor2 = addMonths(anchor, months);
+      }
+
+      const days = Math.floor((e - anchor2) / MS_PER_DAY);
+      return { years, months, days };
+    }
+
+    function monthsSinceStartExact(s, e){
+      let m = 0;
+      let cursor = startOfDay(s);
+      const end = startOfDay(e);
+
+      while (true){
+        const next = addMonths(cursor, 1);
+        if (next <= end){
+          m++;
+          cursor = next;
+        } else break;
+      }
+      return m;
+    }
+
+    function formatHalfYear(monthsPassed){
+      const yearsFloat = monthsPassed / 12; // 0.5, 1.5, 2.5, ...
+      return String(yearsFloat).replace(".", ",");
+    }
+
+    // ===== Instellingen =====
+    const start = new Date(2023, 7, 3); // 03-08-2023
+    const today = startOfDay(new Date());
+
+    // ===== Tekst in kaart =====
+    const d = diffYMD(start, today);
+    document.getElementById("togetherLine").innerHTML =
+      `Samen sinds <strong>${formatNL(start)}</strong><br>` +
+      `Nu samen: <strong>${d.years} jaar</strong>, <strong>${d.months} maanden</strong> en <strong>${d.days} dagen</strong> ❤️`;
+
+    // ===== Exacte mijlpaal-banner (alleen op jubileumdag) =====
+    const milestoneBanner = document.getElementById("milestoneBanner");
+    const milestoneIcon = document.getElementById("milestoneIcon");
+    const milestoneTitle = document.getElementById("milestoneTitle");
+    const milestoneSub = document.getElementById("milestoneSub");
+
+    const monthsPassed = monthsSinceStartExact(start, today);
+    const isExactHalfYearBoundary = (monthsPassed % 6 === 0) && (monthsPassed > 0);
+
+    if (isExactHalfYearBoundary) {
+      const milestoneDate = addMonths(startOfDay(start), monthsPassed);
+
+      if (monthsPassed % 12 === 0) {
+        const years = monthsPassed / 12;
+        milestoneIcon.textContent = "♥️";
+        milestoneTitle.textContent = `Vandaag precies ${years} jaar samen!`;
+        milestoneSub.innerHTML =
+          `Onze liefde groeit elk jaar. Samen sinds <strong>${formatNL(start)}</strong> ♥️`;
+      } else {
+        const yearsTxt = formatHalfYear(monthsPassed);
+        milestoneIcon.textContent = "🫶";
+        milestoneTitle.textContent = `Vandaag precies ${yearsTxt} jaar samen!`;
+        milestoneSub.innerHTML =
+          `Exacte mijlpaal op <strong>${formatNL(milestoneDate)}</strong> 🫶`;
+      }
+
+      milestoneBanner.classList.add("show");
+    } else {
+      milestoneBanner.classList.remove("show");
+    }
+
+    // ===== "Vandaag" label in tijdlijn =====
+    document.getElementById("todayLabel").textContent = formatNL(today);
+    document.getElementById("todayMomentBody").textContent =
+      `Vandaag (${formatNL(today)}) en nog steeds elke dag dankbaar dat we samen zijn. ❤️`;
+
+    // ===== Verborgen bericht =====
+    const btn = document.getElementById("openNote");
+    const note = document.getElementById("note");
+    btn.addEventListener("click", () => {
+      const zichtbaar = note.style.display === "block";
+      note.style.display = zichtbaar ? "none" : "block";
+      btn.textContent = zichtbaar ? "💌 Open lief bericht" : "🙈 Verberg bericht";
+    });
+
+    // ===== Alleen één moment tegelijk open =====
+    const moments = document.querySelectorAll("details.moment");
+    moments.forEach(m => {
+      m.addEventListener("toggle", () => {
+        if (m.open) {
+          moments.forEach(other => {
+            if (other !== m) other.open = false;
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
