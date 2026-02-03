@@ -297,60 +297,88 @@
       font-weight: 700;
     }
 
-    /* ===== Overzichten ===== */
+    /* ===== Mijlpaal banner (alleen zichtbaar op exacte datum) ===== */
     .mini {
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .milestone-banner{
+      display: none;
       margin-top: 10px;
-      color: #555;
-      line-height: 1.6;
-      text-align: left;
+      padding: 14px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,77,141,0.20);
+      background: radial-gradient(120% 120% at 0% 0%, rgba(255,77,141,0.22), transparent 50%),
+              linear-gradient(135deg, #ff4d8d, #ff7ab2);
+      color: #fff;
+      box-shadow: 0 14px 34px rgba(255,77,141,0.25);
+      position: relative;
+      overflow: hidden;
     }
 
-    .mini .pill {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 8px 10px;
+    .milestone-banner::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.35), transparent 35%),
+        radial-gradient(circle at 80% 35%, rgba(255,255,255,0.22), transparent 40%),
+        radial-gradient(circle at 60% 80%, rgba(255,255,255,0.18), transparent 45%);
+      pointer-events:none;
+      opacity: 0.9;
+    }
+
+    .milestone-row{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .milestone-icon{
+      width: 38px;
+      height: 38px;
       border-radius: 14px;
-      background: #fff6fa;
-      border: 1px solid rgba(255,77,141,0.25);
-      font-weight: 800;
-      color: #ff2f7a;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.22);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 20px;
+      flex: 0 0 auto;
     }
 
-    .lists {
-      margin-top: 14px;
-      text-align: left;
-      display: grid;
-      gap: 12px;
+    .milestone-title{
+      font-weight: 950;
+      letter-spacing: .2px;
+      font-size: 1.05rem;
+      line-height: 1.15;
     }
 
-    .lists h3{
-      font-size: 1rem;
-      margin-bottom: 6px;
-    }
-
-    .lists ul{
-      list-style: none;
-      padding-left: 0;
-      margin: 0;
-      display: grid;
-      gap: 6px;
-    }
-
-    .lists li{
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(0,0,0,0.08);
-      background: #fff;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.05);
-    }
-
-    .lists .k {
-      font-weight: 900;
-      color: #222;
-    }
-    .lists .v {
-      color: #666;
+    .milestone-sub{
+      margin-top: 6px;
+      position: relative;
+      z-index: 1;
       font-weight: 700;
+      opacity: 0.95;
+      font-size: 0.95rem;
+    }
+
+    .milestone-sub strong{
+      font-weight: 950;
+    }
+
+    @keyframes popIn {
+      from { transform: translateY(10px) scale(0.98); opacity: 0; }
+      to   { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .milestone-banner.show{
+      display:block;
+      animation: popIn 420ms ease forwards;
     }
 
     /* ===== Fotogalerij ===== */
@@ -436,23 +464,18 @@
 
         <p id="togetherLine" style="color:#555; line-height:1.6;">
           Samen sinds <strong>03-08-2023</strong><br>
-          <!-- wordt door JS gevuld -->
         </p>
 
+        <!-- Alleen zichtbaar op de exacte dag van een halfjaar/jaar mijlpaal -->
         <div class="mini">
-          <span id="milestonePill" class="pill" style="display:none;"></span>
-          <div id="nextMilestone" style="margin-top:10px;"></div>
-        </div>
-
-        <div class="lists">
-          <div>
-            <h3>🎯 Halve-jaren (2,5 / 3,5 / 4,5 / ...)</h3>
-            <ul id="halfYearList"></ul>
-          </div>
-
-          <div>
-            <h3>🎂 Jaar-overzicht (1 / 2 / 3 / 4 / ...)</h3>
-            <ul id="yearList"></ul>
+          <div id="milestoneBanner" class="milestone-banner" aria-live="polite">
+            <div class="milestone-row">
+              <div class="milestone-icon" id="milestoneIcon">🫶</div>
+              <div>
+                <div class="milestone-title" id="milestoneTitle">Vandaag precies …</div>
+              </div>
+            </div>
+            <div class="milestone-sub" id="milestoneSub">❤️</div>
           </div>
         </div>
 
@@ -626,16 +649,6 @@
       return { years, months, days };
     }
 
-    function yearsLabel(n){
-      return n === 1 ? "1 jaar" : `${n} jaar`;
-    }
-
-    function halfYearLabel(n){
-      // n is 2.5, 3.5, ...
-      const s = String(n).replace(".", ",");
-      return `${s} jaar`;
-    }
-
     // ===== Instellingen =====
     const start = new Date(2023, 7, 3); // 03-08-2023 (maand 0-indexed)
     const today = startOfDay(new Date());
@@ -651,12 +664,8 @@
       `Samen sinds <strong>${formatNL(start)}</strong><br>` +
       `Nu samen: <strong>${d.years} jaar</strong>, <strong>${d.months} maanden</strong> en <strong>${d.days} dagen</strong> ❤️`;
 
-    // ===== "Vandaag precies X,5 jaar samen" (alleen als het echt precies zo is) =====
-    // We checken of vandaag precies op een 6-maanden mijlpaal valt én die is .5 (dus niet 1.0, 2.0 etc)
-    const milestonePill = document.getElementById("milestonePill");
-
-    // Bepaal hoeveel maanden er exact sinds start zijn verstreken (door te lopen naar voren).
-    // (Veilig en exact omdat we addMonths gebruiken.)
+    // ===== Exacte mijlpaal-melding (ALLEEN op de exacte dag) =====
+    // We bepalen exact hoeveel volle maanden er voorbij zijn door telkens 1 maand op te tellen.
     function monthsSinceStartExact(s, e){
       let m = 0;
       let cursor = s;
@@ -672,76 +681,42 @@
       return m;
     }
 
+    const milestoneBanner = document.getElementById("milestoneBanner");
+    const milestoneIcon = document.getElementById("milestoneIcon");
+    const milestoneTitle = document.getElementById("milestoneTitle");
+    const milestoneSub = document.getElementById("milestoneSub");
+
     const monthsPassed = monthsSinceStartExact(startOfDay(start), today);
 
-    // Als vandaag precies op een half-jaar-datum valt: monthsPassed % 6 == 0
-    // En als het een ".5 jaar" is: (monthsPassed / 6) is oneven (0.5, 1.5, 2.5, ...)
-    const isHalfYearExact = (monthsPassed % 6 === 0);
-    const halfYearIndex = monthsPassed / 6; // 1 = 0.5 jaar, 2=1.0, 3=1.5, ...
-    const isDotFive = isHalfYearExact && (halfYearIndex % 2 === 1);
+    // Alleen tonen als het EXACT op een 6-maanden grens valt: 0,5 / 1,0 / 1,5 / 2,0 / ...
+    const isExactHalfYearBoundary = (monthsPassed % 6 === 0) && (monthsPassed > 0);
 
-    if (isDotFive) {
-      const yearsFloat = monthsPassed / 12; // 2.5, 3.5, ...
-      milestonePill.style.display = "inline-block";
-      milestonePill.textContent = `🎉 Vandaag precies ${String(yearsFloat).replace(".", ",")} jaar samen!`;
-    } else {
-      milestonePill.style.display = "none";
-    }
+    if (isExactHalfYearBoundary) {
+      const milestoneDate = addMonths(startOfDay(start), monthsPassed);
 
-    // ===== Volgende halve jaar mijlpaal tonen (2,5 / 3,5 / 4,5 / ...) =====
-    const nextMilestone = document.getElementById("nextMilestone");
+      if (monthsPassed % 12 === 0) {
+        // ♥️ Heel jaar (1, 2, 3, ...)
+        const years = monthsPassed / 12;
 
-    function nextHalfYearMilestoneFrom(startDate, fromDate){
-      // Halve jaren met .5: 6 maanden na een heel jaar -> maanden totaal ≡ 6 (mod 12)
-      let cursorMonths = 30; // 2.5 jaar = 30 maanden (zoals jij vroeg start vanaf 2,5)
-      while (true){
-        const date = addMonths(startDate, cursorMonths);
-        if (date >= fromDate) {
-          return { months: cursorMonths, date };
-        }
-        cursorMonths += 12; // +1 jaar => 3.5, 4.5, ...
+        milestoneIcon.textContent = "♥️";
+        milestoneTitle.textContent = `Vandaag precies ${years} jaar samen!`;
+        milestoneSub.innerHTML =
+          `Een jaar vol liefde erbij. Samen sinds <strong>${formatNL(start)}</strong> ♥️`;
+
+      } else {
+        // 🫶 Half jaar (0,5 / 1,5 / 2,5 / ...)
+        const yearsFloat = monthsPassed / 12; // 0.5, 1.5, 2.5, ...
+        const yearsTxt = String(yearsFloat).replace(".", ",");
+
+        milestoneIcon.textContent = "🫶";
+        milestoneTitle.textContent = `Vandaag precies ${yearsTxt} jaar samen!`;
+        milestoneSub.innerHTML =
+          `Elke dag samen is bijzonder. <strong>${formatNL(milestoneDate)}</strong> 🫶`;
       }
-    }
 
-    const nextHalf = nextHalfYearMilestoneFrom(startOfDay(start), today);
-    const nextYearsFloat = nextHalf.months / 12;
-
-    // Als vandaag exact op zo'n 2,5/3,5/... mijlpaal valt, zeg dat ook.
-    if (sameDay(nextHalf.date, today)) {
-      nextMilestone.innerHTML =
-        `✨ Deze mijlpaal is vandaag: <strong>${halfYearLabel(nextYearsFloat)}</strong> (${formatNL(nextHalf.date)}).`;
+      milestoneBanner.classList.add("show");
     } else {
-      nextMilestone.innerHTML =
-        `⏭️ Volgende <strong>halve-jaar</strong> mijlpaal: <strong>${halfYearLabel(nextYearsFloat)}</strong> op <strong>${formatNL(nextHalf.date)}</strong>.`;
-    }
-
-    // ===== Overzicht: 2,5 / 3,5 / 4,5 ... =====
-    const halfYearList = document.getElementById("halfYearList");
-    // Toon bijv. 10 items vanaf 2,5 jaar
-    for (let i = 0; i < 10; i++){
-      const months = 30 + (i * 12);
-      const date = addMonths(startOfDay(start), months);
-      const y = months / 12;
-
-      const li = document.createElement("li");
-      const isToday = sameDay(date, today);
-
-      li.innerHTML =
-        `<span class="k">${halfYearLabel(y)}</span> — <span class="v">${formatNL(date)}${isToday ? " (vandaag 🎉)" : ""}</span>`;
-      halfYearList.appendChild(li);
-    }
-
-    // ===== Overzicht: exacte jaardata 1/2/3/4/... =====
-    const yearList = document.getElementById("yearList");
-    // Toon bijv. 15 jaar vooruit
-    for (let year = 1; year <= 15; year++){
-      const date = addYears(startOfDay(start), year);
-      const li = document.createElement("li");
-      const isToday = sameDay(date, today);
-
-      li.innerHTML =
-        `<span class="k">${yearsLabel(year)}</span> — <span class="v">${formatNL(date)}${isToday ? " (vandaag 🎂)" : ""}</span>`;
-      yearList.appendChild(li);
+      milestoneBanner.classList.remove("show");
     }
 
     // ===== "Vandaag" label in tijdlijn zetten als echte datum =====
@@ -803,4 +778,3 @@
 
 </body>
 </html>
-```0
