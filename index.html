@@ -30,7 +30,7 @@
       animation: fadeIn 1.6s ease forwards;
     }
 
-    /* GROTE WITTE BALK ONDER FOTO */
+    /* WIT BLOK ONDER FOTO */
     .hero-text {
       max-width: 720px;
       margin: 24px auto 22px;
@@ -39,6 +39,7 @@
       border-radius: 20px;
       box-shadow: 0 12px 30px rgba(0,0,0,0.12);
       animation: fadeInUp 0.9s ease forwards;
+      text-align: center;
     }
 
     .hero-text h1 {
@@ -51,47 +52,28 @@
       color: #555;
     }
 
-    /* CONTAINER */
     .container {
       max-width: 720px;
       margin: 0 auto;
       padding: 0 16px 56px;
-      animation: fadeInUp 0.9s ease forwards;
     }
 
-    .quote {
+    .quote, .card {
       background: #fff;
       border-radius: 18px;
       padding: 22px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      margin-bottom: 18px;
       text-align: center;
-      font-style: italic;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-      margin: 0 0 18px;
-    }
-
-    .card {
-      background: #fff;
-      border-radius: 18px;
-      padding: 22px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-      margin: 0 0 18px;
     }
 
     .card h2 { margin-bottom: 10px; }
 
     /* TIMELINE */
-    .timeline-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.25rem;
-      margin-bottom: 12px;
-    }
-
     .timeline {
       position: relative;
       padding-left: 22px;
-      margin-top: 8px;
+      text-align: left;
     }
 
     .timeline::before {
@@ -102,29 +84,17 @@
       bottom: 6px;
       width: 2px;
       background: linear-gradient(#ff4d8d, #ff7ab2);
-      opacity: 0.65;
       border-radius: 99px;
     }
 
     .moment {
       position: relative;
       padding: 14px 14px 14px 16px;
-      margin: 0 0 12px;
+      margin-bottom: 14px;
       border-radius: 16px;
-      background: rgba(255,255,255,0.9);
-      border: 1px solid rgba(0,0,0,0.05);
+      background: #fff;
       box-shadow: 0 8px 18px rgba(0,0,0,0.06);
-      opacity: 0;
-      transform: translateY(12px);
-      animation: fadeInUp 0.7s ease forwards;
     }
-
-    /* Stagger effect */
-    .moment:nth-child(1){ animation-delay: 0.05s; }
-    .moment:nth-child(2){ animation-delay: 0.12s; }
-    .moment:nth-child(3){ animation-delay: 0.19s; }
-    .moment:nth-child(4){ animation-delay: 0.26s; }
-    .moment:nth-child(5){ animation-delay: 0.33s; }
 
     .moment::before {
       content: "";
@@ -138,45 +108,19 @@
       box-shadow: 0 0 0 5px rgba(255,77,141,0.18);
     }
 
-    .moment-head {
-      display: flex;
-      gap: 10px;
-      align-items: baseline;
-      flex-wrap: wrap;
-      margin-bottom: 6px;
-    }
+    .date { font-weight: 800; color: #ff2f7a; }
+    .label { font-weight: 800; margin-left: 6px; }
 
-    .date {
-      font-weight: 800;
-      color: #ff2f7a;
-      letter-spacing: 0.2px;
-    }
-
-    .label {
-      font-weight: 800;
-      color: #222;
-    }
-
-    .desc {
-      color: #555;
-      line-height: 1.55;
-    }
-
-    /* Animations */
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-
+    /* ANIMATIES */
+    @keyframes fadeIn { to { opacity: 1; } }
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Desktop */
     @media (min-width: 768px) {
       .hero-text h1 { font-size: 2.4rem; }
-      .hero-text p  { font-size: 1.15rem; }
-      .timeline-title { font-size: 1.35rem; }
+      .hero-text p { font-size: 1.15rem; }
     }
   </style>
 </head>
@@ -188,13 +132,13 @@
     <img src="./20240223_144946.jpeg" alt="Micha & Sandy">
   </section>
 
-  <!-- GROTE WITTE BALK ONDER FOTO -->
+  <!-- TEKST -->
   <section class="hero-text">
     <h1>Welkom op onze eigen website, lieve schat 💖</h1>
     <p>Een klein romantisch plekje op het internet — alleen van ons.</p>
+    <p id="teller" style="margin-top:10px; font-weight:700;"></p>
   </section>
 
-  <!-- CONTENT -->
   <main class="container">
 
     <div class="quote">
@@ -204,60 +148,42 @@
     <div class="card">
       <h2>💞 Micha & Sandy</h2>
       <p>
-        Dit is ons plekje.<br>
-        Gemaakt met liefde, voor ons samen.<br>
-        Elke glimlach, elk moment — hier hoort het thuis.
+        Samen sinds <strong>03-08-2023</strong><br>
+        En vandaag precies <strong>2,5 jaar</strong> samen 🥂
       </p>
     </div>
 
-    <!-- ONZE MOMENTEN -->
     <div class="card">
-      <div class="timeline-title">📅 Onze momenten</div>
+      <h2>📅 Onze momenten</h2>
 
       <div class="timeline">
         <div class="moment">
-          <div class="moment-head">
-            <div class="date">03-08-2023</div>
-            <div class="label">💗 Het begin van ons</div>
-          </div>
-          <div class="desc">De dag dat ons verhaal begon. Sindsdien samen, elke dag een beetje meer verliefd.</div>
+          <span class="date">03-08-2023</span>
+          <span class="label">💗 Het begin van ons</span>
+          <p>De dag dat ons verhaal begon.</p>
         </div>
 
         <div class="moment">
-          <div class="moment-head">
-            <div class="date">2023</div>
-            <div class="label">✨ Eerste mooie herinnering</div>
-          </div>
-          <div class="desc">Vul hier later jullie favoriete moment in (date, wandeling, etentje…).</div>
-        </div>
-
-        <div class="moment">
-          <div class="moment-head">
-            <div class="date">2024</div>
-            <div class="label">📸 Onze favoriete foto</div>
-          </div>
-          <div class="desc">Die ene foto waar we elke keer weer blij van worden.</div>
-        </div>
-
-        <div class="moment">
-          <div class="moment-head">
-            <div class="date">2025</div>
-            <div class="label">🫶 Samen, gewoon wij</div>
-          </div>
-          <div class="desc">Kleine dingen: samen eten, praten, knuffelen — het voelt als thuis.</div>
-        </div>
-
-        <div class="moment">
-          <div class="moment-head">
-            <div class="date">Altijd</div>
-            <div class="label">💍 Voor altijd</div>
-          </div>
-          <div class="desc">We blijven nieuwe momenten toevoegen… samen.</div>
+          <span class="date">Vandaag</span>
+          <span class="label">🎉 2,5 jaar samen</span>
+          <p>En nog elke dag kiezen we voor elkaar.</p>
         </div>
       </div>
     </div>
 
   </main>
+
+  <script>
+    const start = new Date(2023, 7, 3); // 3 augustus 2023
+    const now = new Date();
+    const days = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+
+    const years = Math.floor(days / 365);
+    const months = Math.floor((days % 365) / 30);
+
+    document.getElementById("teller").textContent =
+      `Samen sinds 03-08-2023 • ${years} jaar en ${months} maanden samen ❤️`;
+  </script>
 
 </body>
 </html>
